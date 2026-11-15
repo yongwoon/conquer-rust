@@ -1,0 +1,22 @@
+services:
+  app:
+    container_name: conquer_rust_dev
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+      - cargo-cache:/usr/local/cargo/registry
+      - cargo-git:/usr/local/cargo/git
+      - target-cache:/app/target
+    ports:
+      - "4000:4000"
+    environment:
+      - CARGO_TARGET_DIR=/app/target
+
+volumes:
+  cargo-cache:
+  cargo-git:
+  target-cache:

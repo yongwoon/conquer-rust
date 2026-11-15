@@ -1,0 +1,20 @@
+FROM rust:1-bookworm AS dev
+
+WORKDIR /app
+
+# 기본 유틸리티 설치
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Rust 개발 필수 컴포넌트 설치 (linter & formatter)
+RUN rustup component add clippy rustfmt
+
+# cargo-binstall 설치 후 cargo-watch 설치 (파일 저장 시 자동 컴파일/테스트 지원)
+RUN curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash && \
+    cargo binstall --no-confirm cargo-watch
+
+# 컨테이너 지속 실행 (docker compose exec 로 상호작용)
+CMD ["sleep", "infinity"]
